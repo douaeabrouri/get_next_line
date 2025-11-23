@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <stdlib.h>
 
-char	*ft_strjoin(void *dst, const void *src, size_t n);
+
+char    *ft_strjoin(char *s1, char *s2);
 int		 found(char *str);
 static		char *buffer;
 char *join_and_free(char *dest, char *src);
@@ -37,31 +39,34 @@ int main(void)
 
 	size_t BUFFER_SIZE = 3;
 	char token;
-	char *tmp;
-	buffer = malloc(sizeof(char) * 1024);
+	char *tmp = malloc(BUFFER_SIZE + 1);
+	char *buffer = malloc(1024);
+	buffer[0] = '\0';
 	int count = 0;
 	while(read(fd, &token, 1) > 0)
 	{
+		tmp[count] = token;
+		count++;
 		if (count < BUFFER_SIZE)
 		{
-			tmp[count] = token;
-			count++;
+			tmp[count] = '\0';
 		}
 		if (found(tmp) == 0)
 		{
-			buffer = join_and_free(buffer, tmp, BUFFER_SIZE);
-			free(tmp);
+			buffer = join_and_free(buffer, tmp);
 			break;
 		}
-		buffer = join_and_free(buffer, tmp, BUFFER_SIZE);
+		buffer = join_and_free(buffer, tmp);
+		count = 0;
 	}
-	buffer[count] = '\0';
+	close(fd);
 	int index = 0;
-	while(index < count)
+	while(buffer[index])
 	{
 		write(1, &buffer[index], 1);
 		index++;
 	}
-	close(fd);
+	free(tmp);
+	free(buffer);
 	return (0);
 }

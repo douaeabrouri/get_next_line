@@ -1,29 +1,36 @@
 #include <stdio.h>
+#include <stdlib.h>
 
-char	*ft_strjoin(char  *s1, char  *s2)
+int ft_strlen(char *s)
 {
-	char	*tmp;
-	int		len;
-	int		index;
-	int		index2;
+	int i = 0;
+	while(s[i])
+		i++;
+	return i;
+}
 
-	if (!s1 || !s2)
-		return (NULL);
-	len = ft_strlen(s1) + ft_strlen(s2);
-	tmp = (char *)malloc(sizeof(char) * (len + 1));
-	if (tmp == NULL)
-		return (NULL);
-	index = 0;
-	while (s1[index])
-	{
-		tmp[index] = s1[index];
-		index++;
-	}
-	index2 = 0;
-	while (s2[index2])
-		tmp[index++] = s2[index2++];
-	tmp[index] = '\0';
-	return (tmp);
+char    *ft_strjoin(char *s1, char *s2)
+{
+    int     len1 = ft_strlen(s1);
+    int     len2 = ft_strlen(s2);
+    char    *tmp = malloc(len1 + len2 + 1);
+    int     i = 0, j = 0;
+
+    if (!tmp)
+        return (NULL);
+
+    while (s1[i])
+    {
+        tmp[i] = s1[i];
+        i++;
+    }
+    while (s2[j])
+    {
+        tmp[i + j] = s2[j];
+        j++;
+    }
+    tmp[i + j] = '\0';
+    return tmp;
 }
 
 int	found(char *str)
@@ -40,9 +47,9 @@ int	found(char *str)
 	return (1);
 }
 
-char *join_and_free(char *dest, char *src, size_t BUFFER_SIZE)
+char *join_and_free(char *dest, char *src)
 {
-	char *new = ft_strjoin(dest, src, BUFFER_SIZE);
+	char *new = ft_strjoin(dest, src);
 	free(src);
 	return (new);
 }
