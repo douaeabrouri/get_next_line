@@ -1,5 +1,16 @@
-#include <stdio.h>
-#include <stdlib.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: doabrour <doabrour@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/24 14:34:18 by doabrour          #+#    #+#             */
+/*   Updated: 2025/11/24 15:49:18 by doabrour         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "get_next_line.h"
 
 int ft_strlen(char *s)
 {
@@ -50,6 +61,28 @@ int	found(char *str)
 char *join_and_free(char *dest, char *src)
 {
 	char *new = ft_strjoin(dest, src);
-	free(src);
 	return (new);
+}
+
+char	*dont_forget_me(char *buffer)
+{
+	char *string;
+	int index;
+	int i;
+	
+	index = 0;
+	while(buffer[index] != '\n' && buffer[index])
+		index++;
+	if (buffer[index] == '\n')
+		index++;
+	string = (char *)malloc(sizeof(char) * (ft_strlen(&buffer[index]) + 1));
+	i = 0;
+	while(buffer[index])
+	{
+		string[i] = buffer[index];
+		index++;
+		i++;
+	}
+	string[i] = '\0';
+	return (string);
 }

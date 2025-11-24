@@ -1,72 +1,52 @@
-#include <stdio.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <stdlib.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: doabrour <doabrour@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/24 14:34:54 by doabrour          #+#    #+#             */
+/*   Updated: 2025/11/24 18:57:33 by doabrour         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
+#include "get_next_line.h"
 
-char    *ft_strjoin(char *s1, char *s2);
-int		 found(char *str);
-static		char *buffer;
-char *join_and_free(char *dest, char *src);
-
-int main(void)
+char	*get_next_line(int fd)
 {
-	// // read the first line!
-	// char buffer[256];
-	// int fd = open("test.txt", O_RDWR);
-	// if (fd == -1)
-	// 	return (1);
+	char		token;
+	static char	*buffer;
+	char		*buffer_val;
+	char		*tmp;
 
-	// int index = 0;
-	// char c;
-	// while(read(fd, &c, 1) > 0 && c != '\n' && index < 255)
-	// {
-	// 	buffer[index] = c;
-	// 	index++;
-	// }
-	// buffer[index] = '\0';
-
-	// write(1, buffer, index);
-	// write(1, "\n", 1); 
-
-	// close(fd);
-	// return (0);
-
-	// //read the secand line with using BUFFER_SIZE!
-	int fd = open("test.txt", O_RDWR);
-	if(fd == -1)
-		return (1);
-
-	size_t BUFFER_SIZE = 3;
-	char token;
-	char *tmp = malloc(BUFFER_SIZE + 1);
-	char *buffer = malloc(1024);
-	buffer[0] = '\0';
-	int count = 0;
-	while(read(fd, &token, 1) > 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE >= 2147483647)
+		return NULL;
+	printf("mazal ma segfaultit 🤲\n");
+	if (!buffer)
 	{
-		tmp[count] = token;
-		count++;
-		if (count < BUFFER_SIZE)
-		{
-			tmp[count] = '\0';
-		}
+		buffer = malloc(1);
+		buffer[0] = '\0';
+	}
+	while(read(fd, tmp, BUFFER_SIZE) > 0)
+	{
+		tmp[BUFFER_SIZE] = '\0';
 		if (found(tmp) == 0)
 		{
-			buffer = join_and_free(buffer, tmp);
+			buffer = ft_strjoin(buffer, tmp);
 			break;
 		}
-		buffer = join_and_free(buffer, tmp);
-		count = 0;
+		buffer = ft_strjoin(buffer, tmp);
 	}
-	close(fd);
 	int index = 0;
-	while(buffer[index])
+	char *line = malloc(100);
+	while(buffer[index] && buffer[index] != '\n')
 	{
-		write(1, &buffer[index], 1);
+		line[index] = buffer[index];
 		index++;
 	}
-	free(tmp);
+	line[index] = '\0';
+	buffer_val = dont_forget_me(buffer);
 	free(buffer);
-	return (0);
+	buffer = buffer_val;
+	return (line);
 }
