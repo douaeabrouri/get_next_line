@@ -6,7 +6,7 @@
 /*   By: doabrour <doabrour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 14:34:18 by doabrour          #+#    #+#             */
-/*   Updated: 2025/11/24 15:49:18 by doabrour         ###   ########.fr       */
+/*   Updated: 2025/11/25 12:42:50 by doabrour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,19 @@ int ft_strlen(char *s)
 
 char    *ft_strjoin(char *s1, char *s2)
 {
-    int     len1 = ft_strlen(s1);
-    int     len2 = ft_strlen(s2);
-    char    *tmp = malloc(len1 + len2 + 1);
-    int     i = 0, j = 0;
+    int     len1;
+    int     len2;
+    char    *tmp;
+    int		i;
+	int		j;
 
-    if (!tmp)
+	len1 = ft_strlen(s1);
+	len2 = ft_strlen(s2);
+	j = 0;
+	i = 0;
+	tmp = malloc(len1 + len2 + 1);
+    if (tmp == NULL)
         return (NULL);
-
     while (s1[i])
     {
         tmp[i] = s1[i];
@@ -56,33 +61,4 @@ int	found(char *str)
 		index++;
 	}
 	return (1);
-}
-
-char *join_and_free(char *dest, char *src)
-{
-	char *new = ft_strjoin(dest, src);
-	return (new);
-}
-
-char	*dont_forget_me(char *buffer)
-{
-	char *string;
-	int index;
-	int i;
-	
-	index = 0;
-	while(buffer[index] != '\n' && buffer[index])
-		index++;
-	if (buffer[index] == '\n')
-		index++;
-	string = (char *)malloc(sizeof(char) * (ft_strlen(&buffer[index]) + 1));
-	i = 0;
-	while(buffer[index])
-	{
-		string[i] = buffer[index];
-		index++;
-		i++;
-	}
-	string[i] = '\0';
-	return (string);
 }

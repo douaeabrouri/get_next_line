@@ -6,7 +6,7 @@
 /*   By: doabrour <doabrour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 14:32:48 by doabrour          #+#    #+#             */
-/*   Updated: 2025/11/24 17:27:35 by doabrour         ###   ########.fr       */
+/*   Updated: 2025/11/25 13:30:45 by doabrour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,10 @@
 #include <stdio.h>
 #include <fcntl.h>
 
-char	*get_next_line(int fd);
+char		*get_next_line(int fd);
 char		*ft_strjoin(char *s1, char *s2);
 int			found(char *str);
 static		char *buffer;
-char		*join_and_free(char *dest, char *src);
-char		*dont_forget_me(char *buffer);
+int			ft_strlen(char *s);
 
 #endif
