@@ -6,13 +6,15 @@ int main(void)
 	fd = open("test.txt", O_RDWR);
 	if (fd == -1)
 		return (1);
-	char *str = get_next_line(fd);
+	char *str;
+	while((str = get_next_line(fd))) {
+		printf("%s", str);
+		free(str);
+	}
 	str = get_next_line(fd);
-	str = get_next_line(fd);
-	str = get_next_line(fd);
-	str = get_next_line(fd);
-	printf("%s\n", str);
+	printf("%s", str);
 	// printf("%s\n", str);
-
+	// printf("%s\n", str);
+	system("leaks a.out");
 	close(fd);
 }
