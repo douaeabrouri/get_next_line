@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: doabrour <doabrour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/24 14:34:54 by doabrour          #+#    #+#             */
-/*   Updated: 2025/11/27 13:24:03 by doabrour         ###   ########.fr       */
+/*   Created: 2025/11/27 11:55:52 by doabrour          #+#    #+#             */
+/*   Updated: 2025/11/27 13:24:58 by doabrour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*update_buffer(char *buffer)
 {
@@ -106,30 +106,69 @@ char	*read_25_line(int fd, char *buffer)
 
 char	*get_next_line(int fd)
 {
-	static char	*buffer;
+	static char	*buffer[OPEN_MAX];
 	char		*result;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || fd >= OPEN_MAX || BUFFER_SIZE <= 0)
 		return (NULL);
-	if (!buffer)
+	if (!buffer[fd])
 	{
-		buffer = malloc(1);
-		if (!buffer)
-			return (free(buffer), buffer = NULL, NULL);
-		buffer[0] = '\0';
+		buffer[fd] = malloc(1);
+		if (!buffer[fd])
+			return (free(buffer[fd]), buffer[fd] = NULL, NULL);
+		buffer[fd][0] = '\0';
 	}
-	buffer = read_25_line(fd, buffer);
-	if (!buffer || buffer[0] == '\0')
-		return (free(buffer), buffer = NULL, NULL);
-	result = line(buffer);
+	buffer[fd] = read_25_line(fd, buffer[fd]);
+	if (!buffer[fd] || buffer[fd][0] == '\0')
+		return (free(buffer[fd]), buffer[fd] = NULL, NULL);
+	result = line(buffer[fd]);
 	if (!result)
-		return (free(buffer), buffer = NULL, NULL);
-	buffer = update_buffer(buffer);
+		return (free(buffer[fd]), buffer[fd] = NULL, NULL);
+	buffer[fd] = update_buffer(buffer[fd]);
 	return (result);
 }
+
+// #include <stdio.h>
+// #include "get_next_line_bonus.h"
+// #include "get_next_line.h"
+// # include <fcntl.h>
+// int main(void)
+// {
+// 	int fd = open("test.txt", O_RDWR);
+// 	int fd2 = open("test2.txt", O_RDWR);
+// 	int fd3 = open("test3.txt", O_RDWR);
+// 	char *str;
+// 	char *str2;
+// 	char *str3;
+// 	while (1) {
+// 		str = get_next_line(fd);
+// 		str2 = get_next_line(fd2);
+// 		str3 = get_next_line(fd3);
+// 		printf("\nstr:%sstr2:%sstr3:%s\n", str, str2, str3);
+// 		if (!str && !str2 && !str3)
+// 			break;
+// 		printf("------------------------------\n");
+// 		free(str);
+// 		free(str2);
+// 		free(str3);
+// 	}
+
+// }
+
 //----------TEST1-------------
 // can you read me?
 // can you also read this line?
 // alsooooo this one😉.
 
 // haha what about me 😚
+//----------TEST2-------------
+// hahah
+// also read this one🧐!
+
+// and heeeeeeere
+
+// yeeees
+//----------TEST3-------------
+// what about meeee!
+// and also this line😆!
+// what about this line too😏
