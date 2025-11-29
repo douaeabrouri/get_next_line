@@ -6,7 +6,7 @@
 /*   By: doabrour <doabrour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/27 11:55:58 by doabrour          #+#    #+#             */
-/*   Updated: 2025/11/27 13:03:44 by doabrour         ###   ########.fr       */
+/*   Updated: 2025/11/29 12:29:41 by doabrour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	j = 0;
 	i = 0;
 	tmp = (char *)malloc(len1 + len2 + 1);
-	if (tmp == NULL)
+	if (!tmp)
 		return (NULL);
 	while (s1[i])
 	{

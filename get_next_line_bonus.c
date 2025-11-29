@@ -6,7 +6,7 @@
 /*   By: doabrour <doabrour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/27 11:55:52 by doabrour          #+#    #+#             */
-/*   Updated: 2025/11/27 13:24:58 by doabrour         ###   ########.fr       */
+/*   Updated: 2025/11/29 12:46:34 by doabrour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,11 @@ char	*read_25_line(int fd, char *buffer)
 {
 	char	*new_buffer;
 	int		bytes;
-	char	tmp[BUFFER_SIZE + 1];
+	char	*tmp;
 
+	tmp = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!tmp)
+		return (free(buffer), NULL);
 	while (1337)
 	{
 		bytes = read(fd, tmp, BUFFER_SIZE);
@@ -92,15 +95,16 @@ char	*read_25_line(int fd, char *buffer)
 			break ;
 		tmp[bytes] = '\0';
 		new_buffer = ft_strjoin(buffer, tmp);
-		if (!new_buffer)
-			return (free(buffer), buffer = NULL, NULL);
 		free(buffer);
+		if (!new_buffer)
+			return (free(tmp), tmp = NULL, NULL);
 		buffer = new_buffer;
 		if (found(buffer) == 0)
 			break ;
 	}
+	free(tmp);
 	if (bytes < 0)
-		return (free(buffer), buffer = NULL, NULL);
+		return (free(buffer), NULL);
 	return (buffer);
 }
 
@@ -109,17 +113,20 @@ char	*get_next_line(int fd)
 	static char	*buffer[OPEN_MAX];
 	char		*result;
 
-	if (fd < 0 || fd >= OPEN_MAX || BUFFER_SIZE <= 0)
+	if (fd < 0 || fd >= OPEN_MAX || 
+		BUFFER_SIZE <= 0 || BUFFER_SIZE >= 2147483647)
 		return (NULL);
 	if (!buffer[fd])
 	{
 		buffer[fd] = malloc(1);
 		if (!buffer[fd])
-			return (free(buffer[fd]), buffer[fd] = NULL, NULL);
+			return (NULL);
 		buffer[fd][0] = '\0';
 	}
 	buffer[fd] = read_25_line(fd, buffer[fd]);
-	if (!buffer[fd] || buffer[fd][0] == '\0')
+	if (!buffer[fd])
+		return (NULL);
+	if (buffer[fd][0] == '\0')
 		return (free(buffer[fd]), buffer[fd] = NULL, NULL);
 	result = line(buffer[fd]);
 	if (!result)

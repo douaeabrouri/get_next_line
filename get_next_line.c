@@ -6,7 +6,7 @@
 /*   By: doabrour <doabrour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 14:34:54 by doabrour          #+#    #+#             */
-/*   Updated: 2025/11/27 13:24:03 by doabrour         ###   ########.fr       */
+/*   Updated: 2025/11/29 12:51:11 by doabrour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,11 @@ char	*read_25_line(int fd, char *buffer)
 {
 	char	*new_buffer;
 	int		bytes;
-	char	tmp[BUFFER_SIZE + 1];
+	char	*tmp;
 
+	tmp = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!tmp)
+		return (free(buffer), NULL);
 	while (1337)
 	{
 		bytes = read(fd, tmp, BUFFER_SIZE);
@@ -92,15 +95,16 @@ char	*read_25_line(int fd, char *buffer)
 			break ;
 		tmp[bytes] = '\0';
 		new_buffer = ft_strjoin(buffer, tmp);
-		if (!new_buffer)
-			return (free(buffer), buffer = NULL, NULL);
 		free(buffer);
+		if (!new_buffer)
+			return (free(tmp), tmp = NULL, NULL);
 		buffer = new_buffer;
 		if (found(buffer) == 0)
 			break ;
 	}
+	free(tmp);
 	if (bytes < 0)
-		return (free(buffer), buffer = NULL, NULL);
+		return (free(buffer), NULL);
 	return (buffer);
 }
 
@@ -109,17 +113,20 @@ char	*get_next_line(int fd)
 	static char	*buffer;
 	char		*result;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 
+		|| BUFFER_SIZE >= 2147483647)
 		return (NULL);
 	if (!buffer)
 	{
 		buffer = malloc(1);
 		if (!buffer)
-			return (free(buffer), buffer = NULL, NULL);
+			return (NULL);
 		buffer[0] = '\0';
 	}
 	buffer = read_25_line(fd, buffer);
-	if (!buffer || buffer[0] == '\0')
+	if (!buffer)
+		return (NULL);
+	if (buffer[0] == '\0')
 		return (free(buffer), buffer = NULL, NULL);
 	result = line(buffer);
 	if (!result)
@@ -127,6 +134,7 @@ char	*get_next_line(int fd)
 	buffer = update_buffer(buffer);
 	return (result);
 }
+
 //----------TEST1-------------
 // can you read me?
 // can you also read this line?
